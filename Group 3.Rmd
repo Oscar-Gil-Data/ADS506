@@ -1,0 +1,40 @@
+---
+title: "San Diego's Ocean Water Monitoring Program"
+author: "Group 3"
+date: "11/14/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE,message=FALSE}
+# R Libraries
+library(astsa)
+library(RCurl)
+```
+
+```{r, warning=FALSE,message=FALSE}
+# Datasets (3 CSV files)
+csv1 <- getURL("https://seshat.datasd.org/pud/omp/water_quality_2011_2019_datasd.csv")
+csv2 <- getURL("https://seshat.datasd.org/pud/omp/water_quality_2000_2010_datasd.csv")
+csv3 <- getURL("https://seshat.datasd.org/pud/omp/water_quality_1990_1999_datasd.csv")
+stations <- getURL("https://seshat.datasd.org/pud/omp/reference_stations_water_quality.csv")
+
+csv1dl <- read.csv( text = csv1 )
+csv2dl <- read.csv( text = csv2 )
+csv3dl <- read.csv( text = csv3 )
+stationsdl <- read.csv( text = stations )
+
+```
+
+```{r, warning=FALSE,message=FALSE}
+# Bind data from 3 CSV files into one dataframe
+df <- rbind(csv1dl, csv2dl, csv3dl)
+```
+
+```{r, warning=FALSE,message=FALSE}
+head(df)
+```
+
