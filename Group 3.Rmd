@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # R Libraries
 library(astsa)
 library(RCurl)
+library(psych)
+library(dplyr)
 ```
 
 ```{r, warning=FALSE,message=FALSE}
@@ -35,6 +37,9 @@ df <- rbind(csv1dl, csv2dl, csv3dl)
 ```
 
 ```{r, warning=FALSE,message=FALSE}
-head(df)
+describe(df)
 ```
 
+```{r, warning=FALSE,message=FALSE}
+df %>% group_by(project) %>% summarise(n=n()) %>% mutate(freq = n / sum(n))
+```
