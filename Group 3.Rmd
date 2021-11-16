@@ -53,7 +53,12 @@ copy_to(conn,
 
 ```{r}
 # combine information from both dataframes into one
-df <- dbGetQuery(conn, sql("SELECT csvs.*, s.lat, s.long FROM csvs left join stations as s on csvs.station = s.[ï..station]"))
+df <- dbGetQuery(conn, sql("
+SELECT csvs.*, s.lat, s.long 
+FROM csvs 
+left join stations as s 
+on csvs.station = s.[ï..station]
+"))
 ```
 
 ```{r, warning=FALSE,message=FALSE}
