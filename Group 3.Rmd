@@ -9,7 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, warning=FALSE,message=FALSE}
+```{r, warn.conflicts=FALSE,message=FALSE}
 # R Libraries
 library(astsa)
 library(RCurl)
@@ -19,16 +19,15 @@ library(dplyr)
 
 ```{r, warning=FALSE,message=FALSE}
 # Datasets (3 CSV files)
-csv1 <- getURL("https://seshat.datasd.org/pud/omp/water_quality_2011_2019_datasd.csv")
-csv2 <- getURL("https://seshat.datasd.org/pud/omp/water_quality_2000_2010_datasd.csv")
-csv3 <- getURL("https://seshat.datasd.org/pud/omp/water_quality_1990_1999_datasd.csv")
-stations <- getURL("https://seshat.datasd.org/pud/omp/reference_stations_water_quality.csv")
+csv1 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_2011_2019_datasd.csv")
+csv2 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_2000_2010_datasd.csv")
+csv3 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_1990_1999_datasd.csv")
+stations <- getURL("http://seshat.datasd.org/pud/omp/reference_stations_water_quality.csv")
 
 csv1dl <- read.csv( text = csv1 )
 csv2dl <- read.csv( text = csv2 )
 csv3dl <- read.csv( text = csv3 )
 stationsdl <- read.csv( text = stations )
-
 ```
 
 ```{r, warning=FALSE,message=FALSE}
