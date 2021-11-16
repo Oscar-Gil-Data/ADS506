@@ -9,36 +9,66 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, warn.conflicts=FALSE,message=FALSE}
+
+```{r, warning=FALSE,message=FALSE}
 # R Libraries
 library(astsa)
 library(RCurl)
 library(psych)
 library(dplyr)
+library(RSQLite)
 ```
+
 
 ```{r, warning=FALSE,message=FALSE}
 # Datasets (3 CSV files)
 csv1 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_2011_2019_datasd.csv")
 csv2 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_2000_2010_datasd.csv")
 csv3 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_1990_1999_datasd.csv")
-stations <- getURL("http://seshat.datasd.org/pud/omp/reference_stations_water_quality.csv")
+stationsCSV <- getURL("http://seshat.datasd.org/pud/omp/reference_stations_water_quality.csv")
 
 csv1dl <- read.csv( text = csv1 )
 csv2dl <- read.csv( text = csv2 )
 csv3dl <- read.csv( text = csv3 )
-stationsdl <- read.csv( text = stations )
+stationsdl <- read.csv( text = stationsCSV )
+
 ```
+
 
 ```{r, warning=FALSE,message=FALSE}
 # Bind data from 3 CSV files into one dataframe
-df <- rbind(csv1dl, csv2dl, csv3dl)
+csvs <- rbind(csv1dl, csv2dl, csv3dl)
+
+# Bind stations data into dataframe
+stations <- rbind(stationsdl)
 ```
+
+
+```{r}
+conn <- dbConnect(RSQLite::SQLite(), "ADS506.db") # to create a SQL database in memory
+
+copy_to(conn,
+        csvs, # load csvs dataframe into SQL
+        overwrite = TRUE) # if exists, overwrite
+
+copy_to(conn,
+        stations, # load stations dataframe into SQL
+        overwrite = TRUE) # if exists, overwrite
+```
+
+
+```{r}
+# combine information from both dataframes into one
+df <- dbGetQuery(conn, sql("SELECT csvs.*, s.lat, s.long FROM csvs left join stations as s on csvs.station = s.[ï..station]"))
+```
+
 
 ```{r, warning=FALSE,message=FALSE}
 describe(df)
 ```
 
+
 ```{r, warning=FALSE,message=FALSE}
 df %>% group_by(project) %>% summarise(n=n()) %>% mutate(freq = n / sum(n))
 ```
+
