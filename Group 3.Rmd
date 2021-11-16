@@ -24,7 +24,6 @@ csv1 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_2011_2019_datasd.
 csv2 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_2000_2010_datasd.csv")
 csv3 <- getURL("http://seshat.datasd.org/pud/omp/water_quality_1990_1999_datasd.csv")
 stationsCSV <- getURL("http://seshat.datasd.org/pud/omp/reference_stations_water_quality.csv")
-
 csv1dl <- read.csv( text = csv1 )
 csv2dl <- read.csv( text = csv2 )
 csv3dl <- read.csv( text = csv3 )
@@ -34,18 +33,15 @@ stationsdl <- read.csv( text = stationsCSV )
 ```{r, warning=FALSE,message=FALSE}
 # Bind data from 3 CSV files into one dataframe
 csvs <- rbind(csv1dl, csv2dl, csv3dl)
-
 # Bind stations data into dataframe
 stations <- rbind(stationsdl)
 ```
 
 ```{r}
 conn <- dbConnect(RSQLite::SQLite(), "ADS506.db") # to create a SQL database in memory
-
 copy_to(conn,
         csvs, # load csvs dataframe into SQL
         overwrite = TRUE) # if exists, overwrite
-
 copy_to(conn,
         stations, # load stations dataframe into SQL
         overwrite = TRUE) # if exists, overwrite
@@ -59,6 +55,9 @@ FROM csvs
 left join stations as s 
 on csvs.station = s.[ï..station]
 "))
+
+# disconnect from database
+dbDisconnect(conn)
 ```
 
 ```{r, warning=FALSE,message=FALSE}
