@@ -16,6 +16,8 @@ library(RCurl)
 library(psych)
 library(dplyr)
 library(RSQLite)
+library(naniar)
+library(ggplot2)
 ```
 
 ```{r, warning=FALSE,message=FALSE}
@@ -58,10 +60,26 @@ on csvs.station = s.[ï..station]
 
 # disconnect from database
 dbDisconnect(conn)
+
+# clean up data that is no longer needed
+rm(conn, csvs, csv1dl, csv2dl , csv3dl, csv1, csv2, csv3, stations, stationsdl, stationsCSV)
+```
+
+```{r}
+# Plot missing data
+vis_miss((df), warn_large_data = FALSE)
+````
+
+```{r}
+str(df)
 ```
 
 ```{r, warning=FALSE,message=FALSE}
-describe(df)
+#describe(df$depth_m)
+
+ggplot(df, aes(x=df$depth_m)) +
+  geom_boxplot(color="darkblue", fill="lightblue") +
+  geom_density()
 ```
 
 ```{r, warning=FALSE,message=FALSE}
