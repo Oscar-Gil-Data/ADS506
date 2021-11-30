@@ -1,7 +1,7 @@
 # ADS 506
 Applied Time Series Analysis - Group 3
 
-The datasets for this project are from data.sandiego.gov.  There are four CSV files combined into one data frame in R Studio.  The combined CSV files result in 1,166,606 observations of 12 variables, containing the following information:
+The datasets for this project are from data.sandiego.gov.  There are four CSV files combined into one data frame in R Studio.  The combined CSV files result in 1,166,606 observations and 12 variables, containing the following information:
 
 **sample ID** to give each sample a unique identifier
 
