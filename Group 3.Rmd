@@ -82,3 +82,47 @@ ggplot(df, aes(x=df$depth_m)) +
 ```{r, warning=FALSE,message=FALSE}
 df %>% group_by(project) %>% summarise(n=n()) %>% mutate(freq = n / sum(n))
 ```
+
+
+# abby's input
+
+```{r}
+df <- read.csv(file = 'C:/Users/abby0/OneDrive/Desktop/MSADS/ADS-506 Applied Time Series Analysis/Final project/data_final.csv')
+```
+
+```{r}
+df.val <- df[c('value')]
+df.ts <- ts(df.test, frequency=12, start=c(1991))
+df.ts
+```
+
+```{r}
+plot(df.ts)
+```
+
+```{r}
+# ACF shows significant autocorrelation. observations are not independent.
+par(mfrow = c(2, 1))
+acf(df.ts)
+pacf(df.ts)
+```
+
+```{r}
+diff_df.ts <- diff(df.ts)
+plot(diff_df.ts)
+```
+
+```{r}
+# ACF shows AR(1). PACF MA(2)?
+par(mfrow = c(2, 1))
+acf(diff_df.ts)
+pacf(diff_df.ts)
+```
+
+```{r}
+sarima.for(diff_df.ts,6,1,0,2)
+```
+
+```{r}
+fit <- sarima(diff_df.ts, 1,0,2)
+```
