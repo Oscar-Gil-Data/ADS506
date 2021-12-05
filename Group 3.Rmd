@@ -141,12 +141,15 @@ tsplot(plts.ts)
 # abby's input
 
 ```{r}
-df <- read.csv(file = 'C:/Users/abby0/OneDrive/Desktop/MSADS/ADS-506 Applied Time Series Analysis/Final project/data_final.csv')
+# get month end value
+sb_mth_end <- sb %>% group_by(sample_month_yr) %>%  do(tail(., n=1))
 ```
 
+
 ```{r}
-df.val <- df[c('value')]
-df.ts <- ts(df.test, frequency=12, start=c(1991))
+# convert to TS
+sb_mth_end.val <- sb_mth_end[c('value')]
+df.ts <- ts(sb_mth_end.val, frequency=12, start=c(1999))
 df.ts
 ```
 
@@ -161,10 +164,12 @@ acf(df.ts)
 pacf(df.ts)
 ```
 
+
 ```{r}
 diff_df.ts <- diff(df.ts)
 plot(diff_df.ts)
 ```
+
 
 ```{r}
 # ACF shows AR(1). PACF MA(2)?
