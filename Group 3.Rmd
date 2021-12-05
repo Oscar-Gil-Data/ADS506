@@ -128,17 +128,6 @@ pl <- df %>% filter(project == "PLOO") %>% filter(units == "CFU/100 mL") %>% fil
 sb <- df %>% filter(project == "SBOO") %>% filter(units == "CFU/100 mL") %>% filter(parameter == "ENTERO")
 ```
 
-```{r}
-# Feel free to delete this Abby - I was trying to replicate your work below
-plts <- pl %>% select(date_sample, value)
-
-plts.ts <- ts(plts, frequency = 12, start=c(1991))
-
-tsplot(plts.ts)
-```
-
-
-# abby's input
 
 ```{r}
 # get month end value
@@ -179,9 +168,14 @@ pacf(diff_df.ts)
 ```
 
 ```{r}
-sarima.for(diff_df.ts,6,1,0,2)
+library(forecast)
+auto.arima(diff_df.ts)
 ```
 
 ```{r}
-fit <- sarima(diff_df.ts, 1,0,2)
+sarima.for(diff_df.ts,6,4,0,2)
+```
+
+```{r}
+fit <- sarima(diff_df.ts, 4,0,2)
 ```
