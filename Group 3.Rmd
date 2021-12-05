@@ -18,6 +18,7 @@ library(dplyr)
 library(RSQLite)
 library(naniar)
 library(ggplot2)
+#library(zoo)
 ```
 
 ```{r, warning=FALSE,message=FALSE}
@@ -66,21 +67,75 @@ rm(conn, csvs, csv1dl, csv2dl , csv3dl, csv1, csv2, csv3, stations, stationsdl, 
 ```{r}
 # Plot missing data
 vis_miss((df), warn_large_data = FALSE)
-````
+```
 
 ```{r}
+# remove all columns with missing data
+df <- na.omit(df)
+```
+
+```{r}
+# Plot missing data
+vis_miss((df), warn_large_data = FALSE)
+```
+
+```{r}
+# We are now left with 1,084,859 observations after dropping columns with missing data
 str(df)
 ```
 
-```{r, warning=FALSE,message=FALSE}
-#describe(df$depth_m)
-ggplot(df, aes(x=df$depth_m)) +
-  geom_boxplot(color="darkblue", fill="lightblue") +
-  geom_density()
+```{r}
+# convert data_sample variable from "character" to "date" data type
+df$date_sample <- as.Date(df$date_sample)
+```
+
+```{r}
+# confirm date_sample is now Date format
+df %>% select(date_sample) %>% str()
+```
+
+```{r}
+# Add new variable from date_sample variable, comprised of "Month_Yr"
+df$sample_month_yr <- format(as.Date(df$date_sample), "%Y-%m")
+```
+
+```{r}
+# Sample 5 rows of date_sample and new variable side by side, to confirm new variable creation
+df %>% select(date_sample, sample_month_yr) %>% sample_n(5)
 ```
 
 ```{r, warning=FALSE,message=FALSE}
+# Variable "project" contains two values, PLOO (Point Loma) and SBOO (South Bay).
+# There is a disproportionate split in the data between both "project"s.
 df %>% group_by(project) %>% summarise(n=n()) %>% mutate(freq = n / sum(n))
+```
+
+```{r}
+# there are several "unit" types in the data.  We are going to select the "unit" type with
+# the highest representation
+df %>% group_by(units) %>% summarise(n=n()) %>% mutate(freq = n / sum(n))
+```
+
+```{r}
+# there are several "unit" types in the data.  We are going to select the "unit" type with
+# the highest representation
+df %>% group_by(parameter) %>% summarise(n=n()) %>% mutate(freq = n / sum(n))
+```
+
+```{r}
+# We will place each "project" into its respective dataframe, filtered for a specific unit and parameter type
+pl <- df %>% filter(project == "PLOO") %>% filter(units == "CFU/100 mL") %>% filter(parameter == "ENTERO")
+
+sb <- df %>% filter(project == "SBOO") %>% filter(units == "CFU/100 mL") %>% filter(parameter == "ENTERO")
+```
+
+```{r}
+# Feel free to delete this Abby - I was trying to replicate your work below
+plts <- pl %>% select(date_sample, value)
+
+plts.ts <- ts(plts, frequency = 12, start=c(1991))
+
+tsplot(plts.ts)
 ```
 
 
