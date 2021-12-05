@@ -117,7 +117,7 @@ df %>% group_by(units) %>% summarise(n=n()) %>% mutate(freq = n / sum(n))
 ```
 
 ```{r}
-# there are several "unit" types in the data.  We are going to select the "unit" type with
+# there are several "parameter" types in the data.  We are going to select the "parameter" type with
 # the highest representation
 df %>% group_by(parameter) %>% summarise(n=n()) %>% mutate(freq = n / sum(n))
 ```
