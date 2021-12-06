@@ -18,6 +18,7 @@ library(dplyr)
 library(RSQLite)
 library(naniar)
 library(ggplot2)
+library(forecast)
 ```
 
 ```{r, warning=FALSE,message=FALSE}
@@ -170,7 +171,6 @@ pacf(diff_df.ts)
 ```
 
 ```{r}
-library(forecast)
 auto.arima(diff_df.ts)
 ```
 
