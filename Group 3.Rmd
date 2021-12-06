@@ -65,7 +65,8 @@ rm(conn, csvs, csv1dl, csv2dl , csv3dl, csv1, csv2, csv3, stations, stationsdl, 
 
 ```{r}
 # Plot missing data
-vis_miss((df), warn_large_data = FALSE)
+vis_miss((df), warn_large_data = FALSE) + 
+  theme(axis.text.x = element_text(angle = 90))
 ```
 
 ```{r}
@@ -75,7 +76,8 @@ df <- na.omit(df)
 
 ```{r}
 # Plot missing data
-vis_miss((df), warn_large_data = FALSE)
+vis_miss((df), warn_large_data = FALSE) + 
+  theme(axis.text.x = element_text(angle = 90))
 ```
 
 ```{r}
